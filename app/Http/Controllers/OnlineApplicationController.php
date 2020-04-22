@@ -9,6 +9,7 @@ use App\Services\userService;
 use Illuminate\Http\Request;
 use App\User;
 use Exception;
+use Illuminate\Database\QueryException;
 
 class OnlineApplicationController extends Controller
 {
@@ -27,8 +28,11 @@ class OnlineApplicationController extends Controller
 
     public function index()
     {
-        $userChosenApplications = $this->userService->getById(auth()->id())->onlineApplications;
+        $userChosenApplications = $this->userService->getById(auth()->id())->OnlineApplications;
         $supportedApplications = $this->onlineApplicationService->getAll();//OnlineApplication::select('id', 'name', 'thumbnail')->get();
+
+        //Remove applications from list that user has already chosen
+        $supportedApplications = $supportedApplications->diff($userChosenApplications);
 
         return response()->view("index", ["supportedTypes" => $supportedApplications, "userChosenTypes" => $userChosenApplications]);
     }
@@ -39,11 +43,10 @@ class OnlineApplicationController extends Controller
 
     public function addOnlineApplication(Request $request)
     {
-        $chosenApplication = OnlineApplication::find($request->id);
         try {
-            User::whereId(auth()->id())->first()->OnlineApplications()->save($chosenApplication);
+            $this->userService->addOnlineApplicationToUser(auth()->id(), $request->id);
             return redirect('/');
-        } catch (Exception $ex) {
+        } catch (QueryException $ex) {
             return redirect('/')->withErrors(['Application already added']);
         }
     }
