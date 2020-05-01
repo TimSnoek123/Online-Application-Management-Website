@@ -14,28 +14,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Index page //
+Route::get('/', 'IndexController@Index');
+
 // Authentication endpoints //
-Route::get("login", "AuthController@index");
+Route::group(['prefix' => 'auth/'], function () {
+    Route::get("login", "AuthController@index");
+    Route::post("login", "AuthController@login");
+    Route::post("register", "AuthController@registerUser");
+    Route::get("register", "AuthController@register");
+    Route::get("logout", "AuthController@Lmicrosoftogout");
+});
 
-Route::post("login", "AuthController@login");
-
-Route::post("register", "AuthController@createAccount");
-
-Route::get("register", "AuthController@register");
+// User endpoints //
+Route::group(['prefix' => 'user/'], function () {
+    Route::post("addOnlineApplication", "UserController@addOnlineApplicationToUser");
+});
 
 
 // Online applications endpoints //
-Route::get('/', 'OnlineApplicationController@Index');
+Route::group(['prefix' => 'application/'], function () {
+    Route::get('', 'OnlineApplicationController@Index');
+    Route::get("getall", "OnlineApplicationController@getAll");
+    Route::get("oauth", "OnlineApplicationController@OauthLogin");
+    Route::get("go/{sourceCompany}/{application}", "OnlineApplicationController@goToOnlineApplication");
+    Route::get('login/{sourceCompany}', 'OnlineApplicationController@doOnlineApplicationLogin');
+    Route::get('getCookieValue', 'OnlineApplicationController@getUnencryptedOAuthToken');
+});
+
+
 
 Route::get('drive/{type}', 'OnlineApplicationController@index');
 
-Route::get("getall", "OnlineApplicationController@getAll");
 
-Route::post("addOnlineApplication", "OnlineApplicationController@addOnlineApplication");
 
-Route::get("oauth", "OnlineApplicationController@OauthLogin");
-
-Route::get("getOauth", "OnlineApplicationController@OAuthLogin");
-
-Route::get("/code/{applicationType}", "OnlineApplicationController@getToken");
-
+Route::get("/code/{sourceCompany}", "OnlineApplicationController@getTokenFromCodeForApplication");

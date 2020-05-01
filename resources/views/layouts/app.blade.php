@@ -25,8 +25,9 @@
    
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('head')
 </head>
-<body>
+<body style="overflow-x: hidden">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
 
@@ -46,10 +47,22 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                    @guest
                         <li class="nav-item">
-                            <a class="nav-link " href="/login">Login</a>
+                            <a class="nav-link " href="/auth/login">Login</a>
                           </li>
-                      
+                          <li class="nav-item">
+                            <a class="nav-link " href="/auth/register">Register</a>
+                          </li>
+                    @endguest
+                      @auth
+                      <li class="nav-item">
+                        <a class="nav-link " href="/application">Applications</a>
+                      </li>  
+                      <li class="nav-item">
+                        <a class="nav-link " href="/auth/logout">Logout</a>
+                      </li> 
+                      @endauth
                     </ul>
                 </div>
             </div>

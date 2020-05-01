@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOAuthClientTable extends Migration
+class CreateSourceCompanyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateOAuthClientTable extends Migration
      */
     public function up()
     {
-        Schema::create('o_auth_clients', function (Blueprint $table) {
+        Schema::create('source_companies', function (Blueprint $table) {
             $table->id();
+            $table->string('companyName');
             $table->timestamps();
-            $table->string('authUrl');
-            $table->string('tokenUrl');
-            $table->string('clientId');
-            $table->json('scopes');
-            $table->string('redirectUri'); 
         });
     }
 
@@ -31,6 +27,6 @@ class CreateOAuthClientTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('o_auth_client');
+        Schema::dropIfExists('source_company');
     }
 }

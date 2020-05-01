@@ -25,25 +25,24 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OnlineApplication whereThumbnail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\OnlineApplication whereUpdatedAt($value)
  */
-class OnlineApplication extends Model
+class SourceCompany extends Model
 {
 
 
     protected $fillable = [
-        'name', 'thumbnail'
+        'companyName',
     ];
 
     protected $hidden = [
         'pivot'
     ];
 
-    public function users()
+    public function OAuthClient()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasOne(OAuthClient::class);
     }
 
-    public function SourceCompany()
-    {
-        return $this->hasOne(SourceCompany::class);
+    public function OnlineApplication(){
+        return $this->hasMany(OnlineApplication::class);
     }
 }
