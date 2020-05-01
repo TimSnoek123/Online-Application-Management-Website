@@ -1,0 +1,20 @@
+.file{
+    cursor: pointer;
+    display: inline-block;
+}
+
+.folder{
+    cursor: pointer;
+    display: inline-block;
+}
+
+.image{
+    cursor: pointer;
+    display: inline-block;
+}
+
+.current-file{
+    text-decoration: none;
+    font-weight: 700;
+    color: black;
+}

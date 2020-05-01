@@ -34,37 +34,46 @@ class OnlineApplicationController extends Controller
         //Remove applications from list that user has already chosen
         $supportedApplications = $supportedApplications->diff($userChosenApplications);
 
-        return response()->view("index", ["supportedTypes" => $supportedApplications, "userChosenTypes" => $userChosenApplications]);
+        return response()->view("applications", ["supportedTypes" => $supportedApplications, "userChosenTypes" => $userChosenApplications]);
     }
 
     public function goToOnlineApplication(Request $request)
     {
+        //User hasn't logged in with this organization yet
+        if (!$request->hasCookie($request['sourceCompany']) && $request->input('redirectFromLogin') == null){
+
+            $request->session()->flash('applicationReturnUrl', $request->path());
+            return $this->doOnlineApplicationLogin($request);
+        }
+
+        return view('applications/microsoft/OneDrive');
+        return response($request->cookie($request['sourceCompany']));
     }
 
-    public function addOnlineApplication(Request $request)
-    {
-        try {
-            $this->userService->addOnlineApplicationToUser(auth()->id(), $request->id);
-            return redirect('/');
-        } catch (QueryException $ex) {
-            return redirect('/')->withErrors(['Application already added']);
-        }
-    }
 
     public function getAll()
     {
         return response($this->onlineApplicationService->getAll());
     }
 
-    public function getToken(Request $request)
+    public function getTokenFromCodeForApplication(Request $request)
     {
-        $oAuthClient = $this->OAuthClientService->getByName($request['applicationType']);
-        return Response()->json($this->OAuthClientService->getToken($request->input('code'), $oAuthClient));
+        $oAuthClient = $this->OAuthClientService->getBySourceCompany($request['sourceCompany']);
+
+        $token = json_encode($this->OAuthClientService->getToken($request->input('code'), $oAuthClient)['access_token']);
+
+
+        //Send back to go to online application 
+        return redirect($request->session()->get('applicationReturnUrl'))->withCookie(cookie($request['sourceCompany'], $token));
     }
 
 
-    public function OAuthLogin()
+    public function doOnlineApplicationLogin(Request $request)
     {
-        return redirect()->away($this->OAuthClientService->getLoginUrlByName('microsoft'));
+        return redirect()->away($this->OAuthClientService->getLoginUrlByName($request['sourceCompany']));
+    }
+
+    public function getUnencryptedOAuthToken(Request $request){
+        return response()->json($request->cookie($request->input('sourceCompany')));
     }
 }

@@ -14,22 +14,6 @@ class AuthController extends Controller
         return view("login");
     }
 
-    public function register(){
-        return view('register');
-    }
-
-    public function createAccount(UserBaseRequest $request)
-    {
-        $user = new User();
-        $user->email = $request->get('email');
-        $user->password = bcrypt($request->get('password'));
-        $user->save();
-
-        Auth::login($user);
-
-        return redirect("/");
-    }
-
     public function login(UserBaseRequest $request)
     {
             $userData = $request->only('email', 'password');
@@ -47,5 +31,27 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
             ], Response::HTTP_OK);
+    }
+
+    public function registerUser(UserBaseRequest $request)
+    {
+        $user = new User();
+        $user->email = $request->get('email');
+        $user->password = bcrypt($request->get('password'));
+        $user->save();
+
+        $this->login($request);
+
+        return redirect('/');
+    }
+
+    public function register(){
+        return view('register');
+    }
+
+    public function logout(){
+        auth()->logout();
+
+        return redirect('/');
     }
 }

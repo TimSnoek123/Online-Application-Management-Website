@@ -15,4 +15,5 @@ class OnlineApplicationService
         return OnlineApplication::all();
     }
 
+
 }

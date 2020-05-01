@@ -19,9 +19,15 @@ class OAuthClientService
         return OAuthClient::where('name', $oauthClientName)->first();
     }
 
+    public function getBySourceCompany($sourceCompanyName){
+        return OAuthClient::with('SourceCompany')->whereHas('SourceCompany', function($query) use ($sourceCompanyName){
+            $query->where('CompanyName', '=', $sourceCompanyName);
+        })->first();
+    }
+
     public function getLoginUrlByName($oauthClientName)
     {
-        $oAuthClient = $this->getByName($oauthClientName);
+        $oAuthClient = $this->getBySourceCompany($oauthClientName);
 
         $loginUrl = $oAuthClient->authUrl;
 
@@ -29,7 +35,7 @@ class OAuthClientService
             'client_id'     => $oAuthClient->clientId,
             'response_type' => $oAuthClient->responseType,
             'redirect_uri'  => $oAuthClient->redirectUri,
-            'scope'         => implode(' ', ['files.readwrite', 'offline_access']),
+            'scope'         => implode(' ', json_decode($oAuthClient->scopes, true)),
             'response_mode' => $oAuthClient->responseMode,
         ];
 
@@ -56,6 +62,6 @@ class OAuthClientService
 
         $data = json_decode($body);
 
-        return $data;
+        return (array) $data;
     }
 }

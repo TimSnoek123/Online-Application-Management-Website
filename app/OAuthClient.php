@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class OAuthClient extends Model
 {
     protected $fillable = [
-        'authUrl', 'tokenUrl', 'clientId', 'scopes' => 'array', 'redirectUri', 'name', 'clientSecret', 'responseMode', 'responseType', 'grantType', 
+        'authUrl', 'tokenUrl', 'clientId', 'scopes' => 'array', 'redirectUri', 'clientSecret', 'responseMode', 'responseType', 'grantType', 
     ];
 
-
+    public function SourceCompany(){
+       return $this->belongsTo(SourceCompany::class);
+    }
 }
