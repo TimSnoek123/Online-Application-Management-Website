@@ -30,7 +30,7 @@ class OnlineApplication extends Model
 
 
     protected $fillable = [
-        'name', 'thumbnail'
+        'name', 'thumbnail', 'get_links' => 'array', 'post_links' => 'array'
     ];
 
     protected $hidden = [

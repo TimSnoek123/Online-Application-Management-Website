@@ -7,6 +7,7 @@ use App\Http\Controllers\OnlineApplicationController;
 use App\Http\Controllers\UserController;
 use App\Repositories\OAuthClientRepository;
 use App\Repositories\UserRepository;
+use App\Services\CommandLinkService;
 use App\Services\OAuthClientService;
 use App\Services\OnlineApplicationService;
 use App\Services\UserService;
@@ -22,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('App\Http\Controllers\OnlineApplicationController', function ($app) {
-            return new OnlineApplicationController($app->make(OnlineApplicationService::class), $app->make(OAuthClientService::class), $app->make(UserService::class));
+            return new OnlineApplicationController($app->make(OnlineApplicationService::class), $app->make(OAuthClientService::class), $app->make(UserService::class), $app->make(CommandLinkService::class));
         });
 
         $this->app->bind('App\Http\Controllers\UserController', function ($app) {

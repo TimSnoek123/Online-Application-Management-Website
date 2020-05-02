@@ -40,6 +40,7 @@ Route::group(['prefix' => 'application/'], function () {
     Route::get("go/{sourceCompany}/{application}", "OnlineApplicationController@goToOnlineApplication");
     Route::get('login/{sourceCompany}', 'OnlineApplicationController@doOnlineApplicationLogin');
     Route::get('getCookieValue', 'OnlineApplicationController@getUnencryptedOAuthToken');
+    Route::get('command/{commandToExecute}', 'OnlineApplicationController@executeApplicationCommand');
 });
 
 

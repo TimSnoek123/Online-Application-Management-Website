@@ -18,3 +18,34 @@
     font-weight: 700;
     color: black;
 }
+
+.current-file:hover{
+    text-decoration: none;
+    color: black;
+}
+
+.container-fluid {
+    width: auto !important;
+    margin-right: 0 !important;
+    margin-left: 17% !important;
+  }
+
+  .onedrive-item-container{
+    margin-left: 15px;
+    margin-right: 20px;
+    margin-bottom: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 10em;
+}
+
+.onedrive-item-row{
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+   
+}
+
+
+
